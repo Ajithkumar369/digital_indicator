@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dynamic Map with Arrow Keys</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      // Initialize the map and marker variables
+      var map, marker;
+      var step = 0.0001; // Define the step size for latitude and longitude change
+
+      // Function to initialize the map
+      function initMap() {
+        // Initial latitude and longitude values
+        var initialLatLng = [9.925201, 78.119774];
+
+        // Initialize the map
+        map = L.map('map').setView(initialLatLng, 22);
+
+        // Set up the OSM layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'testing'
+        }).addTo(map);
+
+        // Add a marker to the map
+        marker = L.marker(initialLatLng).addTo(map)
+          .bindPopup('Hello Ajith!')
+          .openPopup();
+      }
+
+      // Function to update the map with new coordinates
+      function updateMap(lat, lng) {
+        var newLatLng = [lat, lng];
+
+        // Update the map view
+        map.setView(newLatLng, 22);
+
+        // Update the marker position
+        marker.setLatLng(newLatLng)
+          .bindPopup('Updated Location!')
+          .openPopup();
+      }
+
+      // Event listener for arrow keys
+      document.addEventListener('keydown', function(event) {
+        var lat = marker.getLatLng().lat;
+        var lng = marker.getLatLng().lng;
+
+        switch(event.key) {
+          case 'ArrowUp':
+            lat += step;
+            break;
+          case 'ArrowDown':
+            lat -= step;
+            break;
+          case 'ArrowLeft':
+            lng -= step;
+            break;
+          case 'ArrowRight':
+            lng += step;
+            break;
+        }
+
+        updateMap(lat, lng);
+      });
+
+      // Initialize the map on page load
+      window.onload = initMap;
+    </script>
+  </body>
+</html>
